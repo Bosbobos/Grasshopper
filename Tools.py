@@ -7,19 +7,18 @@ class Tools:
     field = gf.GF(2 ** 8)
 
     galois_coef = [148, 32, 133, 16, 194, 192, 1, 251, 1, 192, 194, 16, 133, 32, 148, 1]
-    galois_coef_rev = [1, 148, 32, 133, 16, 194, 192, 1, 251, 1, 192, 194, 16, 133, 32, 148]
 
     def int8(self, vec):
-        return int(vec, 8)
+        return int(vec, 2)
 
     def vec8(self, num):
         return bin(num)[2:].zfill(8)
 
     def toGf(self, vec):
-        return self.field.Poly(list(vec))
+        return gf.Poly(list(vec), self.field)
 
     def toVec(self, gfPoly):
-        return bin(gfPoly)[2:].zfill(8)
+        return ''.join(str(x) for x in gfPoly.coeffs).zfill(8)
 
     def nonlinear_transform(self, vec, reverse = False):
         if reverse:
@@ -28,15 +27,17 @@ class Tools:
         return self.vec8(self.pi[self.int8(vec)])
 
     def linear_transform(self, vec, reverse = False):
-        vec = vec[::-1]
-        res = 0
-        for i in range(16):
-            block = vec[8*i : 8(i+1)]
+        res = ''
+        start, end = 15, -1
+        if reverse: start, end = 14, -1
+        for i in range(start, end, -1):
+            block = vec[8*i : 8*(i+1)]
             el = self.toGf(block)
-            if reverse:
-                el *= self.galois_coef_rev[i]
-            else:
-                el *= self.galois_coef[i]
-            res += int(el)
+            el *= self.galois_coef[start-i]
+            res += self.toVec(el)
 
-        return self.vec8(res)
+        if reverse:
+            el = self.toGf(vec[-8:])
+            res += self.toVec(el*self.galois_coef[15])
+
+        return res
