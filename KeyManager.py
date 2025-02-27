@@ -21,9 +21,7 @@ class KeyManager:
             self.round_const.append(self.opManager.linear_transform(vc))
 
     def F(self, k, a1, a0):
-        res = xor(a1, k)
-        res = self.opManager.nonlinear_transform(res)
-        res = self.opManager.linear_transform(res)
+        res = self.opManager.lsx(k, a1)
         res = xor(res, a0)
 
         return (res, a1)

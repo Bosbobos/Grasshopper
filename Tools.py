@@ -1,3 +1,5 @@
+import numpy as np
+
 def int8(vec):
     return int(vec, 2)
 
@@ -17,4 +19,8 @@ def reverse_bytes(vec):
 
 _xormap = {('0', '1'): '1', ('1', '0'): '1', ('1', '1'): '0', ('0', '0'): '0'}
 def xor(x, y):
+    x, y = str(x), str(y)
     return ''.join([_xormap[a, b] for a, b in zip(x, y)]).zfill(len(x))
+
+def generate_key():
+    return ''.join(str(x) for x in np.random.choice([0, 1], size=256))

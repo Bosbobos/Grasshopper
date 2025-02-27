@@ -58,3 +58,17 @@ class OperationManager:
 
         if reverse: vec = reverse_bytes(vec)
         return vec
+
+    def lsx(self, k, a):
+        res = xor(a, k)
+        res = self.nonlinear_transform(res)
+        res = self.linear_transform(res)
+
+        return res
+
+    def lsx_rev(self, k, a):
+        res = xor(a, k)
+        res = self.linear_transform(res, reverse=True)
+        res = self.nonlinear_transform(res, reverse=True)
+
+        return res
