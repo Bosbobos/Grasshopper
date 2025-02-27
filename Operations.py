@@ -15,7 +15,7 @@ class Operations:
     def __toVec(self, gfPoly):
         return ''.join(str(x) for x in gfPoly.coeffs).zfill(8)
 
-    def nonlinear_transform(self, vec, reverse = False):
+    def __nonlinear_transform_byte(self, vec, reverse = False):
         if reverse:
             return vec8(self.__pi_rev[int8(vec)])
 
@@ -40,6 +40,16 @@ class Operations:
         if reverse:
             return vec[:-8] + byte
         return byte + vec[:-8]
+
+    def nonlinear_transform(self, vec, reverse = False):
+        res = ''
+        if not reverse: vec = reverse_bytes(vec)
+        for i in range(16):
+            block = vec[8*i : 8*(i+1)]
+            res += self.__nonlinear_transform_byte(block, reverse)
+
+        if reverse: res = reverse_bytes(res)
+        return res
 
     def linear_transform(self, vec, reverse = False):
         if not reverse: vec = reverse_bytes(vec)
