@@ -33,3 +33,6 @@ def string_to_binary(text):
 
 def binary_to_string(binary):
     return ''.join(chr(int(binary[i:i + 8], 2)) for i in range(0, len(binary), 8))
+
+def is_binary_string(text):
+    return all(c in '01' for c in text)
