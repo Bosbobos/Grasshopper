@@ -22,5 +22,14 @@ def xor(x, y):
     x, y = str(x), str(y)
     return ''.join([_xormap[a, b] for a, b in zip(x, y)]).zfill(len(x))
 
+def generate_bin_sequence(len):
+    return ''.join(str(x) for x in np.random.choice([0, 1], size=len))
+
 def generate_key():
-    return ''.join(str(x) for x in np.random.choice([0, 1], size=256))
+    return generate_bin_sequence(256)
+
+def string_to_binary(text):
+    return ''.join(bin(ord(i))[2:].zfill(8) for i in text)
+
+def binary_to_string(binary):
+    return ''.join(chr(int(binary[i:i + 8], 2)) for i in range(0, len(binary), 8))
